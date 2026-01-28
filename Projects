@@ -1,0 +1,247 @@
+[17:09, 1/28/2026] ¿: <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey Form</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }…
+[17:12, 1/28/2026] ¿: <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey Form Project</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        #title {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        #description {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #666;
+        }
+        #survey-form {
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input:invalid {
+            border-color: #ff6b6b;
+        }
+        .radio-group, .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .radio-item, .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        input[type="radio"], input[type="checkbox"] {
+            width: auto;
+        }
+        #submit {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        #submit:hover {
+            background-color: #45a049;
+        }
+        .required {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Requirement 1: Page title in h1 with id="title" -->
+        <h1 id="title">Customer Feedback Survey</h1>
+        
+        <!-- Requirement 2: Short explanation in p with id="description" -->
+        <p id="description">Please help us improve our services by completing this short survey. Your feedback is valuable to us.</p>
+        
+        <!-- Requirement 3: Form element with id="survey-form" -->
+        <form id="survey-form" action="#" method="POST">
+            
+            <!-- Name field group -->
+            <div class="form-group">
+                <!-- Requirement 10: Label for name field with id="name-label" -->
+                <label for="name" id="name-label">
+                    Full Name <span class="required">*</span>
+                </label>
+                <!-- Requirement 4: Required text input with id="name" -->
+                <!-- Requirement 11: Placeholder text for name field -->
+                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+            </div>
+            
+            <!-- Email field group -->
+            <div class="form-group">
+                <!-- Requirement 10: Label for email field with id="email-label" -->
+                <label for="email" id="email-label">
+                    Email Address <span class="required">*</span>
+                </label>
+                <!-- Requirement 5: Required email input with id="email" -->
+                <!-- Requirement 6: HTML5 email validation (browser will show error for invalid format) -->
+                <!-- Requirement 11: Placeholder text for email field -->
+                <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+            </div>
+            
+            <!-- Number field group -->
+            <div class="form-group">
+                <!-- Requirement 10: Label for number field with id="number-label" -->
+                <label for="number" id="number-label">Age (Optional)</label>
+                <!-- Requirement 7: Number input with id="number" -->
+                <!-- Requirement 8: HTML5 number validation (prevents non-numbers) -->
+                <!-- Requirement 9: min and max attributes for range validation -->
+                <!-- Requirement 11: Placeholder text for number field -->
+                <input type="number" id="number" name="age" 
+                       min="1" max="120" 
+                       placeholder="Enter your age (between 1 and 120)">
+            </div>
+            
+            <!-- Dropdown field group -->
+            <div class="form-group">
+                <label for="dropdown">How did you hear about us?</label>
+                <!-- Requirement 12: Select dropdown with id="dropdown" and at least 2 options -->
+                <select id="dropdown" name="referral">
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="friend">Friend/Family</option>
+                    <option value="social">Social Media</option>
+                    <option value="ad">Advertisement</option>
+                    <option value="search">Search Engine</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <!-- Radio buttons group -->
+            <div class="form-group">
+                <label>How satisfied are you with our service?</label>
+                <!-- Requirement 13: Radio buttons grouped by name attribute -->
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="very-satisfied" name="satisfaction" value="very-satisfied">
+                        <label for="very-satisfied">Very Satisfied</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="satisfied" name="satisfaction" value="satisfied">
+                        <label for="satisfied">Satisfied</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="neutral" name="satisfaction" value="neutral">
+                        <label for="neutral">Neutral</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="dissatisfied" name="satisfaction" value="dissatisfied">
+                        <label for="dissatisfied">Dissatisfied</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="very-dissatisfied" name="satisfaction" value="very-dissatisfied">
+                        <label for="very-dissatisfied">Very Dissatisfied</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Checkboxes group -->
+            <div class="form-group">
+                <label>Which features do you use regularly? (Select all that apply)</label>
+                <!-- Requirement 14: Checkboxes with value attributes -->
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="feature1" name="features" value="online-ordering">
+                        <label for="feature1">Online Ordering</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="feature2" name="features" value="customer-support">
+                        <label for="feature2">Customer Support</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="feature3" name="features" value="mobile-app">
+                        <label for="feature3">Mobile App</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="feature4" name="features" value="loyalty-program">
+                        <label for="feature4">Loyalty Program</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="feature5" name="features" value="product-reviews">
+                        <label for="feature5">Product Reviews</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Textarea field group -->
+            <div class="form-group">
+                <label for="comments">Additional Comments</label>
+                <!-- Requirement 15: Textarea for additional comments -->
+                <textarea id="comments" name="comments" rows="4" 
+                          placeholder="Please share any additional feedback or suggestions..."></textarea>
+            </div>
+            
+            <!-- Submit button -->
+            <!-- Requirement 16: Submit button with id="submit" -->
+            <button type="submit" id="submit">Submit Survey</button>
+        </form>
+    </div>
+</body>
+</html>
