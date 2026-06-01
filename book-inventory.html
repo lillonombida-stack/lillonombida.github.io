@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book Inventory</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Libre+Baskerville:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1a1209;
+      --paper: #f5f0e8;
+      --aged: #e8dfc8;
+      --rust: #b84c1a;
+      --forest: #2d5a3d;
+      --navy: #1c2e4a;
+      --gold: #c9963a;
+      --muted: #7a6e5f;
+      --rule: #c8bfac;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--paper);
+      background-image:
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 27px,
+          rgba(0,0,0,0.04) 27px,
+          rgba(0,0,0,0.04) 28px
+        );
+      font-family: 'Libre Baskerville', Georgia, serif;
+      color: var(--ink);
+      min-height: 100vh;
+      padding: 3rem 2rem 5rem;
+    }
+
+    /* ── Page header ── */
+    .page-header {
+      max-width: 860px;
+      margin: 0 auto 2.5rem;
+      border-bottom: 3px double var(--rule);
+      padding-bottom: 1.5rem;
+      display: flex;
+      align-items: baseline;
+      gap: 1.5rem;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      line-height: 1;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--rust);
+    }
+
+    .subtitle {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ── Legend ── */
+    .legend {
+      max-width: 860px;
+      margin: 0 auto 1.5rem;
+      display: flex;
+      gap: 1.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+
+    /* ── Table wrapper ── */
+    .table-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      overflow: hidden;
+      box-shadow: 4px 4px 0 var(--aged), 8px 8px 0 var(--rule);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #faf7f0;
+    }
+
+    thead tr {
+      background: var(--ink);
+    }
+
+    thead th {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--aged);
+      padding: 0.85rem 1.1rem;
+      text-align: left;
+      font-weight: 500;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+
+    thead th:last-child { border-right: none; }
+
+    tbody tr {
+      border-bottom: 1px solid var(--rule);
+      transition: filter 0.15s;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { filter: brightness(0.97); }
+
+    td {
+      padding: 0.9rem 1.1rem;
+      vertical-align: middle;
+      font-size: 0.88rem;
+      line-height: 1.4;
+    }
+
+    td:first-child {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-style: italic;
+      font-size: 0.95rem;
+    }
+
+    td:nth-child(2) {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.03em;
+    }
+
+    td:nth-child(3) {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 0.03em;
+    }
+
+    /* ── Row status background gradients (attribute selectors) ── */
+    tr[class~="read"] {
+      background-image: linear-gradient(
+        105deg,
+        rgba(45, 90, 61, 0.07) 0%,
+        rgba(45, 90, 61, 0.03) 60%,
+        rgba(45, 90, 61, 0.0) 100%
+      );
+    }
+
+    tr[class~="to-read"] {
+      background-image: linear-gradient(
+        105deg,
+        rgba(28, 46, 74, 0.07) 0%,
+        rgba(28, 46, 74, 0.03) 60%,
+        rgba(28, 46, 74, 0.0) 100%
+      );
+    }
+
+    tr[class~="in-progress"] {
+      background-image: linear-gradient(
+        105deg,
+        rgba(184, 76, 26, 0.07) 0%,
+        rgba(201, 150, 58, 0.03) 60%,
+        rgba(201, 150, 58, 0.0) 100%
+      );
+    }
+
+    /* ── Span display ── */
+    span {
+      display: inline-block;
+    }
+
+    /* ── Status + Rate span sizing (attribute selector: class starts with) ── */
+    span[class~="status"],
+    span[class^="rate"] {
+      height: 28px;
+      width: auto;
+      padding: 0 10px;
+    }
+
+    /* ── Status badges ── */
+    span[class~="status"] {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      line-height: 28px;
+      border-radius: 2px;
+      white-space: nowrap;
+    }
+
+    tr[class~="read"] span[class~="status"] {
+      border: 1px solid rgba(45, 90, 61, 0.5);
+      background-image: linear-gradient(135deg, rgba(45,90,61,0.18) 0%, rgba(45,90,61,0.06) 100%);
+      color: var(--forest);
+    }
+
+    tr[class~="to-read"] span[class~="status"] {
+      border: 1px solid rgba(28, 46, 74, 0.45);
+      background-image: linear-gradient(135deg, rgba(28,46,74,0.15) 0%, rgba(28,46,74,0.05) 100%);
+      color: var(--navy);
+    }
+
+    tr[class~="in-progress"] span[class~="status"] {
+      border: 1px solid rgba(184, 76, 26, 0.5);
+      background-image: linear-gradient(135deg, rgba(184,76,26,0.18) 0%, rgba(201,150,58,0.08) 100%);
+      color: var(--rust);
+    }
+
+    /* ── Rate container ── */
+    span[class^="rate"] {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      padding: 0 6px;
+      width: auto;
+    }
+
+    /* ── Rate dots (children of rate spans) ── */
+    span[class^="rate"] > span {
+      border: 1.5px solid var(--rule);
+      border-radius: 50%;
+      margin: 0 2px;
+      height: 11px;
+      width: 11px;
+      background-color: var(--aged);
+    }
+
+    /* ── Filled dots by rating ── */
+    span[class~="one"] > span:first-child {
+      background-image: linear-gradient(135deg, var(--gold) 0%, #e8b44a 100%);
+    }
+
+    span[class*="two"] > span:nth-child(-n+2) {
+      background-image: linear-gradient(135deg, var(--gold) 0%, #e8b44a 100%);
+    }
+
+    span[class*="three"] > span {
+      background-image: linear-gradient(135deg, var(--gold) 0%, #e8b44a 100%);
+    }
+
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <h1>Book <em>Inventory</em></h1>
+    <span class="subtitle">Personal Library · 2025</span>
+  </header>
+
+  <div class="legend">
+    <span><span class="legend-dot" style="background:var(--forest)"></span>Read</span>
+    <span><span class="legend-dot" style="background:var(--navy)"></span>To Read</span>
+    <span><span class="legend-dot" style="background:var(--rust)"></span>In Progress</span>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Category</th>
+          <th>Status</th>
+          <th>Rate</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr class="read">
+          <td>The Name of the Wind</td>
+          <td>Patrick Rothfuss</td>
+          <td>Fantasy</td>
+          <td><span class="status">Read</span></td>
+          <td>
+            <span class="rate three">
+              <span></span><span></span><span></span>
+            </span>
+          </td>
+        </tr>
+
+        <tr class="read">
+          <td>Sapiens</td>
+          <td>Yuval Noah Harari</td>
+          <td>History</td>
+          <td><span class="status">Read</span></td>
+          <td>
+            <span class="rate two">
+              <span></span><span></span><span></span>
+            </span>
+          </td>
+        </tr>
+
+        <tr class="in-progress">
+          <td>The Brothers Karamazov</td>
+          <td>Fyodor Dostoevsky</td>
+          <td>Classic Fiction</td>
+          <td><span class="status">In Progress</span></td>
+          <td>
+            <span class="rate">
+              <span></span><span></span><span></span>
+            </span>
+          </td>
+        </tr>
+
+        <tr class="to-read">
+          <td>Blood Meridian</td>
+          <td>Cormac McCarthy</td>
+          <td>Literary Fiction</td>
+          <td><span class="status">To Read</span></td>
+          <td>
+            <span class="rate">
+              <span></span><span></span><span></span>
+            </span>
+          </td>
+        </tr>
+
+        <tr class="read">
+          <td>Project Hail Mary</td>
+          <td>Andy Weir</td>
+          <td>Sci-Fi</td>
+          <td><span class="status">Read</span></td>
+          <td>
+            <span class="rate one">
+              <span></span><span></span><span></span>
+            </span>
+          </td>
+        </tr>
+
+        <tr class="to-read">
+          <td>Educated</td>
+          <td>Tara Westover</td>
+          <td>Memoir</td>
+          <td><span class="status">To Read</span></td>
+          <td>
+            <span class="rate">
+              <span></span><span></span><span></span>
+            </span>
+          </td>
+        </tr>
+
+        <tr class="in-progress">
+          <td>Thinking, Fast and Slow</td>
+          <td>Daniel Kahneman</td>
+          <td>Psychology</td>
+          <td><span class="status">In Progress</span></td>
+          <td>
+            <span class="rate">
+              <span></span><span></span><span></span>
+            </span>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+</body>
+</html>
