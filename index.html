@@ -1,11 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Lillo Nombida | Portfolio</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dev Portfolio</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <h1>Hello, I’m Lillo</h1>
-  <p>Beginner Web Developer learning HTML and CSS.</p>
+
+  <!-- NAVBAR -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <span class="nav-logo">∿ folio</span>
+      <ul class="nav-links">
+        <li><a href="#welcome-section">Home</a></li>
+        <li><a href="#project-section">Work</a></li>
+        <li><a href="#contact-section">Contact</a></li>
+        <li>
+          <a id="profile-link" href="https://github.com" target="_blank" rel="noopener noreferrer" class="nav-cta">GitHub ↗</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- WELCOME SECTION -->
+  <section id="welcome-section">
+    <div class="welcome-inner">
+      <div class="welcome-label">Available for work · 2026</div>
+      <h1>
+        Crafting<br />
+        <em>digital</em><br />
+        experiences
+      </h1>
+      <p class="welcome-sub">Full-stack developer & designer who believes code and creativity are the same thing.</p>
+      <a href="#project-section" class="scroll-cta">See my work <span class="arrow">↓</span></a>
+    </div>
+    <div class="welcome-marquee" aria-hidden="true">
+      <span>React · Node.js · TypeScript · CSS · Python · GraphQL · PostgreSQL · Figma · React · Node.js · TypeScript · CSS · Python · GraphQL · PostgreSQL · Figma ·</span>
+    </div>
+  </section>
+
+  <!-- PROJECTS SECTION -->
+  <section id="project-section">
+    <div class="section-header">
+      <span class="section-label">Selected Work</span>
+      <h2>Projects</h2>
+    </div>
+
+    <div class="projects-grid">
+
+      <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="project-tile" data-index="01">
+        <div class="project-tile-top">
+          <div class="project-icon">⬡</div>
+          <span class="project-year">2025</span>
+        </div>
+        <h3 class="project-title">Luminary UI Kit</h3>
+        <p class="project-desc">A component library built with React and TypeScript featuring 60+ production-ready components with dark mode support.</p>
+        <div class="project-tags">
+          <span>React</span><span>TypeScript</span><span>Storybook</span>
+        </div>
+        <span class="project-link">View project →</span>
+      </a>
+
+      <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="project-tile" data-index="02">
+        <div class="project-tile-top">
+          <div class="project-icon">◈</div>
+          <span class="project-year">2025</span>
+        </div>
+        <h3 class="project-title">Orbit Analytics</h3>
+        <p class="project-desc">Real-time analytics dashboard with WebSocket data streams, D3.js visualisations, and a Go backend.</p>
+        <div class="project-tags">
+          <span>Go</span><span>D3.js</span><span>WebSockets</span>
+        </div>
+        <span class="project-link">View project →</span>
+      </a>
+
+      <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="project-tile" data-index="03">
+        <div class="project-tile-top">
+          <div class="project-icon">⬢</div>
+          <span class="project-year">2024</span>
+        </div>
+        <h3 class="project-title">Prose CMS</h3>
+        <p class="project-desc">A headless content management system with a visual block editor, API-first design, and multi-tenant support.</p>
+        <div class="project-tags">
+          <span>Next.js</span><span>PostgreSQL</span><span>Prisma</span>
+        </div>
+        <span class="project-link">View project →</span>
+      </a>
+
+      <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="project-tile featured" data-index="04">
+        <div class="project-tile-top">
+          <div class="project-icon">⬟</div>
+          <span class="project-year">2024</span>
+        </div>
+        <h3 class="project-title">Synthwave Music App</h3>
+        <p class="project-desc">Browser-based synthesiser and sequencer using the Web Audio API. Create, loop, and export your own beats entirely in-browser.</p>
+        <div class="project-tags">
+          <span>Web Audio</span><span>Canvas</span><span>Vanilla JS</span>
+        </div>
+        <span class="project-link">View project →</span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- CONTACT SECTION -->
+  <section id="contact-section">
+    <div class="contact-inner">
+      <span class="section-label">Get in touch</span>
+      <h2>Let's build<br /><em>something great</em></h2>
+      <p>Open to freelance projects, full-time roles, and interesting collaborations.</p>
+      <a id="profile-link-contact" href="https://github.com" target="_blank" rel="noopener noreferrer" class="contact-btn">View GitHub Profile ↗</a>
+    </div>
+  </section>
+
+  <footer>
+    <span>Built with intention · 2026</span>
+    <span>∿</span>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
