@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#000;
+  --white:#fff;
+  --grey:#888;
+  --light:#F2F2F2;
+  --border:#DEDEDE;
+  --ff-display:'Bebas Neue',Impact,sans-serif;
+  --ff-body:'DM Sans',sans-serif;
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{background:var(--white);color:var(--black);font-family:var(--ff-body);font-weight:300;overflow-x:hidden}
+
+/* CART BADGE */
+.cart-count{
+  position:absolute;
+  top:-6px;right:-8px;
+  background:var(--black);
+  color:var(--white);
+  font-size:0.6rem;
+  font-weight:500;
+  width:16px;height:16px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;
+  z-index:100;
+  background:var(--white);
+  border-bottom:1px solid var(--border);
+  padding:0 3rem;
+  height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-brand{
+  font-family:var(--ff-display);
+  font-size:1.5rem;
+  letter-spacing:0.05em;
+  color:var(--black);
+  text-decoration:none;
+}
+.nav-links{list-style:none;display:flex;gap:2rem}
+.nav-links a{
+  font-size:0.78rem;
+  font-weight:500;
+  color:var(--grey);
+  text-decoration:none;
+  letter-spacing:0.04em;
+  transition:color 0.18s;
+}
+.nav-links a:hover{color:var(--black)}
+.nav-right{display:flex;align-items:center;gap:1.5rem}
+.nav-icon{
+  position:relative;
+  background:none;border:none;
+  cursor:pointer;font-size:1.1rem;
+  color:var(--black);padding:0;
+  line-height:1;
+}
+.cart-sidebar{
+  position:fixed;top:0;right:-420px;
+  width:420px;height:100vh;
+  background:var(--white);
+  border-left:1px solid var(--border);
+  z-index:200;
+  transition:right 0.35s cubic-bezier(0.4,0,0.2,1);
+  display:flex;flex-direction:column;
+  padding:2rem;
+}
+.cart-sidebar.open{right:0}
+.cart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem}
+.cart-title{font-family:var(--ff-display);font-size:1.8rem;letter-spacing:0.04em}
+.cart-close{background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--black)}
+.cart-items{flex:1;overflow-y:auto}
+.cart-empty{color:var(--grey);font-size:0.88rem;margin-top:1rem}
+.cart-item{
+  display:flex;gap:1rem;
+  padding:1rem 0;
+  border-bottom:1px solid var(--border);
+  align-items:center;
+}
+.cart-item-img{
+  width:64px;height:80px;
+  background:var(--light);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;flex-shrink:0;
+}
+.cart-item-info{flex:1}
+.cart-item-name{font-size:0.85rem;font-weight:500;margin-bottom:0.25rem}
+.cart-item-price{font-size:0.8rem;color:var(--grey)}
+.cart-item-remove{background:none;border:none;cursor:pointer;color:var(--grey);font-size:0.75rem;text-decoration:underline;margin-top:0.3rem;display:block}
+.cart-footer{margin-top:1.5rem;border-top:1px solid var(--border);padding-top:1.5rem}
+.cart-total{display:flex;justify-content:space-between;font-weight:500;font-size:0.9rem;margin-bottom:1.5rem}
+.cart-checkout{
+  width:100%;
+  background:var(--black);color:var(--white);
+  border:none;padding:16px;
+  font-family:var(--ff-display);
+  font-size:1.2rem;letter-spacing:0.08em;
+  cursor:pointer;
+  transition:opacity 0.2s;
+}
+.cart-checkout:hover{opacity:0.8}
+.overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.35);
+  z-index:150;opacity:0;pointer-events:none;transition:opacity 0.3s;
+}
+.overlay.visible{opacity:1;pointer-events:all}
+
+/* HERO */
+#hero{
+  margin-top:60px;
+  height:calc(100vh - 60px);
+  min-height:520px;
+  background:var(--black);
+  display:flex;flex-direction:column;
+  justify-content:flex-end;
+  padding:3rem;
+  position:relative;
+  overflow:hidden;
+}
+.hero-watermark{
+  position:absolute;
+  top:-0.12em;right:-0.05em;
+  font-family:var(--ff-display);
+  font-size:clamp(12rem,28vw,22rem);
+  color:rgba(255,255,255,0.04);
+  line-height:0.9;
+  pointer-events:none;
+  user-select:none;
+  letter-spacing:-0.02em;
+}
+.hero-tag{
+  font-size:0.72rem;
+  font-weight:500;
+  color:var(--grey);
+  letter-spacing:0.1em;
+  margin-bottom:1.25rem;
+}
+#hero h1{
+  font-family:var(--ff-display);
+  font-size:clamp(4.5rem,12vw,10rem);
+  line-height:0.88;
+  letter-spacing:0.01em;
+  color:var(--white);
+  margin-bottom:2.5rem;
+  max-width:900px;
+}
+.hero-bottom{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:2rem;
+}
+.hero-desc{
+  font-size:0.9rem;
+  color:rgba(255,255,255,0.5);
+  line-height:1.6;
+  max-width:320px;
+}
+.hero-cta{
+  display:inline-block;
+  background:var(--white);
+  color:var(--black);
+  font-family:var(--ff-display);
+  font-size:1.1rem;
+  letter-spacing:0.08em;
+  padding:14px 40px;
+  text-decoration:none;
+  flex-shrink:0;
+  transition:background 0.2s,color 0.2s;
+}
+.hero-cta:hover{background:var(--light)}
+
+/* TICKER */
+.ticker{
+  background:var(--black);
+  color:var(--white);
+  padding:12px 0;
+  overflow:hidden;
+  white-space:nowrap;
+  border-top:1px solid #222;
+}
+.ticker-inner{
+  display:inline-block;
+  animation:tick 25s linear infinite;
+  font-family:var(--ff-display);
+  font-size:1rem;
+  letter-spacing:0.12em;
+}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* COLLECTION */
+#collection{
+  padding:5rem 3rem;
+}
+.section-header{
+  display:flex;align-items:baseline;justify-content:space-between;
+  margin-bottom:3rem;
+  border-bottom:1px solid var(--border);
+  padding-bottom:1rem;
+}
+.section-title{
+  font-family:var(--ff-display);
+  font-size:clamp(2rem,5vw,3.5rem);
+  letter-spacing:0.03em;
+}
+.section-filter{
+  display:flex;gap:1rem;
+}
+.filter-btn{
+  background:none;border:none;
+  font-family:var(--ff-body);
+  font-size:0.78rem;
+  font-weight:500;
+  color:var(--grey);
+  cursor:pointer;
+  padding:4px 0;
+  border-bottom:1.5px solid transparent;
+  transition:color 0.18s,border-color 0.18s;
+}
+.filter-btn.active,.filter-btn:hover{color:var(--black);border-bottom-color:var(--black)}
+
+/* ASYMMETRIC PRODUCT GRID */
+.product-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  grid-template-rows:auto auto;
+  gap:1.5px;
+  background:var(--border);
+}
+.product-card{
+  background:var(--white);
+  display:flex;flex-direction:column;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+}
+.product-card.wide{grid-column:span 2}
+.product-card.tall .product-img{height:480px}
+.product-card:hover .product-img-inner{transform:scale(1.04)}
+.product-card:hover .add-to-cart-btn{opacity:1;transform:translateY(0)}
+.product-img{
+  height:320px;
+  background:var(--light);
+  overflow:hidden;
+  position:relative;
+  display:flex;align-items:center;justify-content:center;
+}
+.product-img-inner{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);
+  font-size:4rem;
+}
+.product-card.dark-card .product-img{background:var(--black)}
+.add-to-cart-btn{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  background:var(--black);
+  color:var(--white);
+  border:none;
+  font-family:var(--ff-display);
+  font-size:1rem;
+  letter-spacing:0.1em;
+  padding:14px;
+  cursor:pointer;
+  opacity:0;
+  transform:translateY(8px);
+  transition:opacity 0.25s,transform 0.25s;
+}
+.product-card.dark-card .add-to-cart-btn{background:var(--white);color:var(--black)}
+.product-info{padding:1.25rem 1.25rem 1.5rem}
+.product-name{
+  font-weight:500;
+  font-size:0.95rem;
+  margin-bottom:0.3rem;
+  letter-spacing:0.01em;
+}
+.product-price{
+  font-size:0.88rem;
+  color:var(--grey);
+}
+.product-badge{
+  position:absolute;top:1rem;left:1rem;
+  background:var(--black);
+  color:var(--white);
+  font-size:0.65rem;
+  font-weight:500;
+  padding:4px 9px;
+  letter-spacing:0.06em;
+}
+.product-card.dark-card .product-badge{background:var(--white);color:var(--black)}
+
+/* BRAND STRIP */
+#brand-strip{
+  background:var(--black);
+  color:var(--white);
+  padding:6rem 3rem;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:4rem;
+  align-items:center;
+}
+.brand-heading{
+  font-family:var(--ff-display);
+  font-size:clamp(3rem,7vw,5.5rem);
+  line-height:0.92;
+  letter-spacing:0.02em;
+}
+.brand-body{
+  font-size:0.88rem;
+  color:rgba(255,255,255,0.55);
+  line-height:1.75;
+  margin-bottom:2rem;
+  max-width:400px;
+}
+.brand-link{
+  display:inline-block;
+  color:var(--white);
+  font-size:0.82rem;
+  font-weight:500;
+  text-decoration:none;
+  border-bottom:1px solid rgba(255,255,255,0.35);
+  padding-bottom:2px;
+  transition:border-color 0.2s;
+}
+.brand-link:hover{border-color:var(--white)}
+
+/* NEWSLETTER */
+#newsletter{
+  padding:5rem 3rem;
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:4rem;
+}
+.newsletter-heading{
+  font-family:var(--ff-display);
+  font-size:clamp(2rem,4vw,3rem);
+  letter-spacing:0.03em;
+  flex-shrink:0;
+}
+.newsletter-form{
+  flex:1;display:flex;gap:0;
+  border:1px solid var(--black);
+  max-width:520px;
+}
+.newsletter-input{
+  flex:1;
+  border:none;outline:none;
+  padding:14px 1.25rem;
+  font-family:var(--ff-body);
+  font-size:0.85rem;
+  background:transparent;
+}
+.newsletter-submit{
+  background:var(--black);color:var(--white);
+  border:none;
+  font-family:var(--ff-display);
+  font-size:1rem;letter-spacing:0.08em;
+  padding:14px 28px;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:opacity 0.2s;
+}
+.newsletter-submit:hover{opacity:0.8}
+
+/* FOOTER */
+footer{
+  background:var(--black);
+  color:var(--white);
+  padding:3rem;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:3rem;
+  border-top:1px solid #222;
+}
+.footer-brand{
+  font-family:var(--ff-display);
+  font-size:2rem;letter-spacing:0.06em;
+  margin-bottom:0.75rem;
+}
+.footer-tagline{font-size:0.78rem;color:rgba(255,255,255,0.4)}
+.footer-col h4{
+  font-family:var(--ff-display);
+  font-size:1rem;letter-spacing:0.06em;
+  margin-bottom:1rem;
+}
+.footer-col ul{list-style:none}
+.footer-col li{margin-bottom:0.6rem}
+.footer-col a{
+  color:rgba(255,255,255,0.45);
+  text-decoration:none;
+  font-size:0.8rem;
+  transition:color 0.18s;
+}
+.footer-col a:hover{color:var(--white)}
+.footer-bottom{
+  background:var(--black);
+  border-top:1px solid #222;
+  padding:1.25rem 3rem;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.footer-copy{font-size:0.72rem;color:rgba(255,255,255,0.3)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  nav{padding:0 1.5rem}
+  .nav-links{display:none}
+  #hero{padding:2rem}
+  .hero-watermark{font-size:clamp(8rem,35vw,14rem)}
+  .hero-bottom{flex-direction:column;align-items:flex-start;gap:1.25rem}
+  #collection{padding:3rem 1.5rem}
+  .product-grid{grid-template-columns:1fr 1fr}
+  .product-card.wide{grid-column:span 2}
+  .product-card.tall .product-img{height:320px}
+  #brand-strip{grid-template-columns:1fr;padding:3.5rem 1.5rem;gap:2rem}
+  #newsletter{flex-direction:column;gap:1.5rem;padding:3rem 1.5rem}
+  .newsletter-form{max-width:100%;width:100%}
+  footer{grid-template-columns:1fr;padding:2.5rem 1.5rem}
+  .footer-bottom{padding:1rem 1.5rem;flex-direction:column;gap:0.5rem;text-align:center}
+  .cart-sidebar{width:100%;right:-100%}
+}
+@media(max-width:560px){
+  .product-grid{grid-template-columns:1fr}
+  .product-card.wide{grid-column:span 1}
+  .section-filter{display:none}
+  #hero h1{font-size:clamp(3.5rem,18vw,5.5rem)}
+}
+</style>
+</head>
+<body>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+
+<!-- CART SIDEBAR -->
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <span class="cart-title">Your Bag</span>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <p class="cart-empty">Your bag is empty.</p>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total"><span>Total</span><span id="cartTotal">R0.00</span></div>
+    <button class="cart-checkout">Checkout</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="#">TJL</a>
+  <ul class="nav-links">
+    <li><a href="#collection">Collection</a></li>
+    <li><a href="#brand-strip">About</a></li>
+    <li><a href="#newsletter">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="nav-icon" onclick="openCart()" aria-label="Open cart">
+      🛍
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-watermark" aria-hidden="true">TJL</div>
+  <p class="hero-tag">Entertainment Clothing — Drop 01</p>
+  <h1>Wear the<br/>Culture.</h1>
+  <div class="hero-bottom">
+    <p class="hero-desc">TJL Entertainment is more than a label. It's a statement — for those who live at the intersection of music, fashion, and street culture.</p>
+    <a href="#collection" class="hero-cta">Shop the Drop</a>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker" aria-hidden="true">
+  <span class="ticker-inner">
+    TJL ENTERTAINMENT &nbsp;—&nbsp; NEW DROP &nbsp;—&nbsp; WEAR THE CULTURE &nbsp;—&nbsp; LIMITED PIECES &nbsp;—&nbsp; FREE SHIPPING OVER R800 &nbsp;—&nbsp; TJL ENTERTAINMENT &nbsp;—&nbsp; NEW DROP &nbsp;—&nbsp; WEAR THE CULTURE &nbsp;—&nbsp; LIMITED PIECES &nbsp;—&nbsp; FREE SHIPPING OVER R800 &nbsp;—&nbsp;
+  </span>
+</div>
+
+<!-- COLLECTION -->
+<section id="collection">
+  <div class="section-header">
+    <h2 class="section-title">The Collection</h2>
+    <div class="section-filter">
+      <button class="filter-btn active" onclick="filterProducts('all',this)">All</button>
+      <button class="filter-btn" onclick="filterProducts('tops',this)">Tops</button>
+      <button class="filter-btn" onclick="filterProducts('bottoms',this)">Bottoms</button>
+      <button class="filter-btn" onclick="filterProducts('accessories',this)">Accessories</button>
+    </div>
+  </div>
+
+  <div class="product-grid" id="productGrid">
+
+    <div class="product-card tall dark-card" data-category="tops">
+      <div class="product-img">
+        <div class="product-img-inner">🖤</div>
+        <span class="product-badge">New</span>
+        <button class="add-to-cart-btn" onclick="addToCart('TJL Core Tee — Black',379)">Add to Bag</button>
+      </div>
+      <div class="product-info">
+        <div class="product-name">TJL Core Tee — Black</div>
+        <div class="product-price">R379</div>
+      </div>
+    </div>
+
+    <div class="product-card" data-category="tops">
+      <div class="product-img">
+        <div class="product-img-inner">🤍</div>
+        <button class="add-to-cart-btn" onclick="addToCart('Culture Hoodie — White',680)">Add to Bag</button>
+      </div>
+      <div class="product-info">
+        <div class="product-name">Culture Hoodie — White</div>
+        <div class="product-price">R680</div>
+      </div>
+    </div>
+
+    <div class="product-card" data-category="accessories">
+      <div class="product-img">
+        <div class="product-img-inner">🧢</div>
+        <span class="product-badge">Limited</span>
+        <button class="add-to-cart-btn" onclick="addToCart('TJL 6-Panel Cap',260)">Add to Bag</button>
+      </div>
+      <div class="product-info">
+        <div class="product-name">TJL 6-Panel Cap</div>
+        <div class="product-price">R260</div>
+      </div>
+    </div>
+
+    <div class="product-card wide" data-category="bottoms">
+      <div class="product-img" style="height:280px">
+        <div class="product-img-inner">🖤</div>
+        <button class="add-to-cart-btn" onclick="addToCart('Stage Cargo Pants — Black',850)">Add to Bag</button>
+      </div>
+      <div class="product-info">
+        <div class="product-name">Stage Cargo Pants — Black</div>
+        <div class="product-price">R850</div>
+      </div>
+    </div>
+
+    <div class="product-card dark-card" data-category="tops">
+      <div class="product-img">
+        <div class="product-img-inner">🎭</div>
+        <span class="product-badge">Collab</span>
+        <button class="add-to-cart-btn" onclick="addToCart('TJL Crewneck — Varsity',720)">Add to Bag</button>
+      </div>
+      <div class="product-info">
+        <div class="product-name">TJL Crewneck — Varsity</div>
+        <div class="product-price">R720</div>
+      </div>
+    </div>
+
+    <div class="product-card" data-category="accessories">
+      <div class="product-img">
+        <div class="product-img-inner">🤍</div>
+        <button class="add-to-cart-btn" onclick="addToCart('Logo Tote Bag',195)">Add to Bag</button>
+      </div>
+      <div class="product-info">
+        <div class="product-name">Logo Tote Bag</div>
+        <div class="product-price">R195</div>
+      </div>
+    </div>
+
+    <div class="product-card" data-category="tops">
+      <div class="product-img">
+        <div class="product-img-inner">🖤</div>
+        <span class="product-badge">New</span>
+        <button class="add-to-cart-btn" onclick="addToCart('TJL Bomber Jacket',1150)">Add to Bag</button>
+      </div>
+      <div class="product-info">
+        <div class="product-name">TJL Bomber Jacket</div>
+        <div class="product-price">R1,150</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- BRAND STRIP -->
+<section id="brand-strip">
+  <h2 class="brand-heading">Born from<br/>the beat.</h2>
+  <div>
+    <p class="brand-body">TJL Entertainment started as a music collective and grew into a full creative house. Our clothing is built for the stage, the studio, and the streets — wherever the culture moves, we move with it.</p>
+    <p class="brand-body">Every piece is designed in-house and produced in limited runs. No restocks. No reprints.</p>
+    <a href="#collection" class="brand-link">Browse the full collection</a>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section id="newsletter">
+  <h2 class="newsletter-heading">Get early<br/>access.</h2>
+  <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+    <input class="newsletter-input" type="email" placeholder="Your email address" required/>
+    <button type="submit" class="newsletter-submit">Subscribe</button>
+  </form>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-brand">TJL</div>
+    <div class="footer-tagline">Entertainment Clothing</div>
+  </div>
+  <div class="footer-col">
+    <h4>Shop</h4>
+    <ul>
+      <li><a href="#collection">New Arrivals</a></li>
+      <li><a href="#collection">Tops</a></li>
+      <li><a href="#collection">Bottoms</a></li>
+      <li><a href="#collection">Accessories</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Info</h4>
+    <ul>
+      <li><a href="#">About TJL</a></li>
+      <li><a href="#">Sizing Guide</a></li>
+      <li><a href="#">Shipping & Returns</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <span class="footer-copy">© 2026 TJL Entertainment. All rights reserved.</span>
+  <span class="footer-copy">Made with intention.</span>
+</div>
+
+<script>
+let cart=[];
+
+function openCart(){
+  document.getElementById('cartSidebar').classList.add('open');
+  document.getElementById('overlay').classList.add('visible');
+}
+function closeCart(){
+  document.getElementById('cartSidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('visible');
+}
+
+function addToCart(name,price){
+  const existing=cart.find(i=>i.name===name);
+  if(existing){existing.qty++}else{cart.push({name,price,qty:1,emoji:['🖤','🤍','🎭','🧢'][Math.floor(Math.random()*4)]})}
+  renderCart();
+  openCart();
+}
+
+function removeFromCart(name){
+  cart=cart.filter(i=>i.name!==name);
+  renderCart();
+}
+
+function renderCart(){
+  const el=document.getElementById('cartItems');
+  const countEl=document.getElementById('cartCount');
+  const totalEl=document.getElementById('cartTotal');
+  const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  const count=cart.reduce((s,i)=>s+i.qty,0);
+  countEl.textContent=count;
+  totalEl.textContent='R'+total.toLocaleString('en-ZA',{minimumFractionDigits:2});
+  if(!cart.length){
+    el.innerHTML='<p class="cart-empty">Your bag is empty.</p>';return;
+  }
+  el.innerHTML=cart.map(i=>`
+    <div class="cart-item">
+      <div class="cart-item-img">${i.emoji}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${i.name} ${i.qty>1?'<span style="color:var(--grey);font-size:0.75rem">×'+i.qty+'</span>':''}</div>
+        <div class="cart-item-price">R${(i.price*i.qty).toLocaleString('en-ZA',{minimumFractionDigits:2})}</div>
+        <button class="cart-item-remove" onclick="removeFromCart('${i.name}')">Remove</button>
+      </div>
+    </div>`).join('');
+}
+
+function filterProducts(cat,btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.product-card').forEach(c=>{
+    const show=cat==='all'||c.dataset.category===cat;
+    c.style.display=show?'flex':'none';
+  });
+}
+
+function handleNewsletter(e){
+  e.preventDefault();
+  const btn=e.target.querySelector('button');
+  btn.textContent='Subscribed ✓';
+  btn.style.background='#333';
+  setTimeout(()=>{btn.textContent='Subscribe';btn.style.background='';e.target.reset()},3000);
+}
+</script>
+</body>
+</html>
