@@ -1,149 +1,551 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Lillo Nombida</title>
-<meta name="description" content="Lillo Nombida — developer portfolio." />
-<link rel="stylesheet" href="style.css" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calcify — JavaScript Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #0f0f1a;
+      --surface:     #1a1a2e;
+      --surface2:    #16213e;
+      --accent:      #4f46e5;
+      --accent2:     #7c3aed;
+      --accent-glow: rgba(79,70,229,0.35);
+      --op-bg:       #2d2b55;
+      --op-hover:    #3d3b75;
+      --num-bg:      #1e1e35;
+      --num-hover:   #2a2a4a;
+      --eq-bg:       linear-gradient(135deg, #4f46e5, #7c3aed);
+      --text:        #f1f5f9;
+      --text-dim:    #94a3b8;
+      --text-history:#64748b;
+      --red:         #ef4444;
+      --radius:      16px;
+      --btn-radius:  14px;
+    }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      padding: 20px 16px;
+    }
+
+    /* ── BRAND ── */
+    .brand {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .brand strong { color: var(--accent); }
+
+    /* ── SHELL ── */
+    .calc {
+      width: 100%;
+      max-width: 360px;
+      background: var(--surface);
+      border-radius: 28px;
+      border: 1px solid rgba(79,70,229,0.25);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.04),
+        0 24px 60px rgba(0,0,0,0.6),
+        0 0 60px var(--accent-glow);
+      overflow: hidden;
+    }
+
+    /* ── DISPLAY ── */
+    .display {
+      background: var(--surface2);
+      padding: 28px 24px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .history {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-history);
+      min-height: 20px;
+      text-align: right;
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .expression {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      text-align: right;
+      min-height: 22px;
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .main-display {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 3rem;
+      font-weight: 300;
+      color: var(--text);
+      text-align: right;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      transition: font-size 0.1s;
+    }
+
+    .main-display.small  { font-size: 2.2rem; }
+    .main-display.xsmall { font-size: 1.6rem; }
+
+    /* ── BUTTON GRID ── */
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      padding: 18px;
+    }
+
+    .btn {
+      background: var(--num-bg);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: var(--btn-radius);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 0;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.12s, transform 0.08s, box-shadow 0.12s;
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0);
+      transition: background 0.12s;
+      border-radius: inherit;
+    }
+
+    .btn:hover { background: var(--num-hover); }
+    .btn:hover::after { background: rgba(255,255,255,0.04); }
+    .btn:active { transform: scale(0.94); }
+
+    /* Operator buttons */
+    .btn.op {
+      background: var(--op-bg);
+      color: #a78bfa;
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+    .btn.op:hover { background: var(--op-hover); }
+
+    /* Clear / special */
+    .btn.clear {
+      background: rgba(239,68,68,0.12);
+      color: #f87171;
+      border-color: rgba(239,68,68,0.2);
+    }
+    .btn.clear:hover { background: rgba(239,68,68,0.22); }
+
+    .btn.special {
+      background: rgba(79,70,229,0.12);
+      color: #818cf8;
+      border-color: rgba(79,70,229,0.2);
+      font-size: 0.95rem;
+    }
+    .btn.special:hover { background: rgba(79,70,229,0.22); }
+
+    /* Equals */
+    .btn.eq {
+      background: var(--eq-bg);
+      color: #fff;
+      font-size: 1.4rem;
+      font-weight: 600;
+      border: none;
+      box-shadow: 0 4px 20px rgba(79,70,229,0.4);
+      grid-column: span 1;
+    }
+    .btn.eq:hover { box-shadow: 0 4px 28px rgba(79,70,229,0.6); filter: brightness(1.1); }
+
+    /* Zero spans 2 cols */
+    .btn.zero { grid-column: span 2; justify-content: flex-start; padding-left: 26px; }
+
+    /* Ripple effect */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.18);
+      transform: scale(0);
+      animation: ripple 0.4s linear;
+      pointer-events: none;
+    }
+    @keyframes ripple {
+      to { transform: scale(4); opacity: 0; }
+    }
+
+    /* ── HISTORY PANEL ── */
+    .history-panel {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 0 18px 18px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    .history-panel.open { max-height: 200px; }
+
+    .history-title {
+      font-size: 0.7rem;
+      color: var(--text-history);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 12px 0 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .history-clear {
+      background: none;
+      border: none;
+      color: var(--red);
+      font-size: 0.7rem;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .history-clear:hover { opacity: 1; }
+
+    .history-list {
+      list-style: none;
+      overflow-y: auto;
+      max-height: 140px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.1) transparent;
+    }
+
+    .history-list li {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-history);
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      cursor: pointer;
+      transition: color 0.15s;
+      text-align: right;
+    }
+    .history-list li:hover { color: var(--text-dim); }
+    .history-list li span { color: var(--text); font-weight: 500; }
+
+    /* ── FOOTER ── */
+    .footer {
+      margin-top: 16px;
+      font-size: 0.72rem;
+      color: #334155;
+      text-align: center;
+    }
+
+    /* ── KEYBOARD HINT ── */
+    .kb-hint {
+      margin-top: 10px;
+      font-size: 0.7rem;
+      color: #334155;
+      text-align: center;
+    }
+
+    @media (max-width: 400px) {
+      .btn { height: 60px; font-size: 1rem; }
+      .main-display { font-size: 2.6rem; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- NAVBAR -->
-<header class="nav-wrap">
-  <nav class="nav-pill">
-    <a href="#top" class="nav-logo">Lillo <span>Nombida</span></a>
-    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle menu">
-      <span></span><span></span><span></span>
-    </button>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="#work">Work</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#contact">Contact</a></li>
-      <!-- EDIT ME: replace with your GitHub profile URL if different -->
-      <li><a href="https://github.com/lillonombida-stack" target="_blank" rel="noopener noreferrer" class="nav-cta">GitHub ↗</a></li>
-    </ul>
-  </nav>
-</header>
+  <div class="brand">⚡ <strong>Calcify</strong> — JavaScript Calculator</div>
 
-<!-- HERO -->
-<section id="top" class="hero">
-  <div class="hero-inner">
-    <p class="eyebrow">Portfolio · 2026</p>
-    <h1 class="hero-title">
-      Hey, I'm<br />
-      <span class="chroma" aria-label="Lillo Nombida">
-        <span>L</span><span>i</span><span>l</span><span>l</span><span>o</span><span>&nbsp;</span><span>N</span><span>o</span><span>m</span><span>b</span><span>i</span><span>d</span><span>a</span>
-      </span>
-    </h1>
-    <!-- EDIT ME: swap this for your own one-line pitch -->
-    <p class="hero-sub">I build things for the web. This is where I keep the projects I'm proud of.</p>
-    <div class="hero-actions">
-      <a href="#work" class="btn btn-ink">See my work <span class="arrow">↓</span></a>
-      <a href="#contact" class="btn btn-outline">Say hello <span class="arrow">→</span></a>
+  <div class="calc" id="calc">
+
+    <!-- Display -->
+    <div class="display">
+      <div class="history" id="historyLine"></div>
+      <div class="expression" id="expressionLine"></div>
+      <div class="main-display" id="mainDisplay">0</div>
     </div>
-    <div class="hero-badge" aria-hidden="true">available for work</div>
-  </div>
-</section>
 
-<!-- MARQUEE -->
-<div class="marquee" aria-hidden="true">
-  <div class="marquee-track">
-    <!-- EDIT ME: replace with your real stack -->
-    <span>HTML · CSS · JavaScript · Git · Design · Curiosity · HTML · CSS · JavaScript · Git · Design · Curiosity ·</span>
-    <span>HTML · CSS · JavaScript · Git · Design · Curiosity · HTML · CSS · JavaScript · Git · Design · Curiosity ·</span>
-  </div>
-</div>
+    <!-- Buttons -->
+    <div class="buttons">
+      <!-- Row 1 -->
+      <button class="btn clear"    data-action="clear">AC</button>
+      <button class="btn special"  data-action="sign">+/−</button>
+      <button class="btn special"  data-action="percent">%</button>
+      <button class="btn op"       data-action="op" data-val="÷">÷</button>
 
-<!-- WORK -->
-<section id="work" class="work">
-  <div class="section-head">
-    <p class="eyebrow">Selected work</p>
-    <h2>Projects</h2>
-    <p class="section-note">Duplicate any card below and fill in a real project — look for the "EDIT ME" comments in the code.</p>
-  </div>
+      <!-- Row 2 -->
+      <button class="btn"          data-action="num" data-val="7">7</button>
+      <button class="btn"          data-action="num" data-val="8">8</button>
+      <button class="btn"          data-action="num" data-val="9">9</button>
+      <button class="btn op"       data-action="op"  data-val="×">×</button>
 
-  <div class="card-grid">
+      <!-- Row 3 -->
+      <button class="btn"          data-action="num" data-val="4">4</button>
+      <button class="btn"          data-action="num" data-val="5">5</button>
+      <button class="btn"          data-action="num" data-val="6">6</button>
+      <button class="btn op"       data-action="op"  data-val="−">−</button>
 
-    <!-- EDIT ME: Project 1 — replace title, description, tags, and link -->
-    <a href="#" target="_blank" rel="noopener noreferrer" class="card card-pink">
-      <div class="card-top">
-        <span class="card-icon">◆</span>
-        <span class="card-year">2026</span>
-      </div>
-      <h3 class="card-title">Project Name</h3>
-      <p class="card-desc">One or two sentences on what this project does, who it's for, and why it exists. Replace with your real project.</p>
-      <div class="card-tags"><span>Tag</span><span>Tag</span><span>Tag</span></div>
-      <span class="card-link">View project →</span>
-    </a>
+      <!-- Row 4 -->
+      <button class="btn"          data-action="num" data-val="1">1</button>
+      <button class="btn"          data-action="num" data-val="2">2</button>
+      <button class="btn"          data-action="num" data-val="3">3</button>
+      <button class="btn op"       data-action="op"  data-val="+">+</button>
 
-    <!-- EDIT ME: Project 2 -->
-    <a href="#" target="_blank" rel="noopener noreferrer" class="card card-blue">
-      <div class="card-top">
-        <span class="card-icon">▲</span>
-        <span class="card-year">2026</span>
-      </div>
-      <h3 class="card-title">Project Name</h3>
-      <p class="card-desc">One or two sentences on what this project does, who it's for, and why it exists. Replace with your real project.</p>
-      <div class="card-tags"><span>Tag</span><span>Tag</span><span>Tag</span></div>
-      <span class="card-link">View project →</span>
-    </a>
-
-    <!-- EDIT ME: Project 3 -->
-    <a href="#" target="_blank" rel="noopener noreferrer" class="card card-yellow">
-      <div class="card-top">
-        <span class="card-icon">●</span>
-        <span class="card-year">2025</span>
-      </div>
-      <h3 class="card-title">Project Name</h3>
-      <p class="card-desc">One or two sentences on what this project does, who it's for, and why it exists. Replace with your real project.</p>
-      <div class="card-tags"><span>Tag</span><span>Tag</span><span>Tag</span></div>
-      <span class="card-link">View project →</span>
-    </a>
-
-    <!-- Ghost card: copy this block to add a fourth (or fifth) project -->
-    <a href="#" class="card card-ghost">
-      <span class="card-plus">+</span>
-      <span class="card-ghost-text">Add a project</span>
-      <span class="card-ghost-sub">Copy this card in index.html and fill it in</span>
-    </a>
-
-  </div>
-</section>
-
-<!-- ABOUT -->
-<section id="about" class="about">
-  <div class="about-inner">
-    <p class="eyebrow">About</p>
-    <!-- EDIT ME: a short bio, 2–4 sentences, in your own voice -->
-    <p class="about-text">Write a couple of sentences here about who you are, what you're into, and what you're currently learning or working on. Keep it human — this is the part people actually read.</p>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section id="contact" class="contact">
-  <div class="contact-inner">
-    <p class="eyebrow eyebrow-light">Get in touch</p>
-    <h2>Let's build<br /><em>something colorful</em></h2>
-    <p class="contact-sub">Open to opportunities, freelance work, and interesting collaborations.</p>
-    <div class="contact-links">
-      <!-- EDIT ME: replace with your real email -->
-      <a href="mailto:lillononkonyana36@gmail.com" class="pill">Email</a>
-      <a href="https://github.com/lillonombida-stack" target="_blank" rel="noopener noreferrer" class="pill">GitHub</a>
-      <!-- EDIT ME: add or remove links as needed -->
-      <a href="#" class="pill">LinkedIn</a>
+      <!-- Row 5 -->
+      <button class="btn zero"     data-action="num" data-val="0">0</button>
+      <button class="btn"          data-action="decimal">.</button>
+      <button class="btn eq"       data-action="equals">=</button>
     </div>
+
+    <!-- History Panel -->
+    <div class="history-panel" id="historyPanel">
+      <div class="history-title">
+        History
+        <button class="history-clear" onclick="clearHistory()">Clear</button>
+      </div>
+      <ul class="history-list" id="historyList"></ul>
+    </div>
+
   </div>
-</section>
 
-<footer class="footer">
-  <span>Built by Lillo Nombida · 2026</span>
-  <a href="#top" class="footer-back">Back to top ↑</a>
-</footer>
+  <div class="kb-hint">⌨ Keyboard supported · Click History to toggle</div>
+  <div class="footer">Built by Lillo Nombida · lillonombida.github.io</div>
 
-<script src="script.js"></script>
+<script>
+  // ── STATE ──
+  let current    = '0';
+  let previous   = '';
+  let operator   = null;
+  let shouldReset = false;
+  let history    = [];
+  let histOpen   = false;
+
+  // ── DOM ──
+  const mainDisplay   = document.getElementById('mainDisplay');
+  const expressionLine = document.getElementById('expressionLine');
+  const historyLine   = document.getElementById('historyLine');
+  const historyPanel  = document.getElementById('historyPanel');
+  const historyList   = document.getElementById('historyList');
+
+  // ── DISPLAY ──
+  function updateDisplay() {
+    // Scale font based on length
+    const len = current.length;
+    mainDisplay.className = 'main-display' + (len > 12 ? ' xsmall' : len > 9 ? ' small' : '');
+    mainDisplay.textContent = formatNumber(current);
+
+    if (operator && previous) {
+      expressionLine.textContent = `${formatNumber(previous)} ${operator}`;
+    } else {
+      expressionLine.textContent = '';
+    }
+  }
+
+  function formatNumber(n) {
+    if (n === 'Error') return 'Error';
+    if (n.includes('.')) {
+      const [int, dec] = n.split('.');
+      return Number(int).toLocaleString() + '.' + dec;
+    }
+    if (n === '-') return '-';
+    const num = parseFloat(n);
+    if (isNaN(num)) return n;
+    if (Math.abs(num) >= 1e15) return num.toExponential(4);
+    return num.toLocaleString();
+  }
+
+  // ── NUMBER INPUT ──
+  function inputNum(val) {
+    if (shouldReset) { current = val === '0' ? '0' : val; shouldReset = false; }
+    else if (current === '0' && val !== '.') current = val;
+    else if (current.length >= 16) return;
+    else current += val;
+    updateDisplay();
+  }
+
+  // ── DECIMAL ──
+  function inputDecimal() {
+    if (shouldReset) { current = '0.'; shouldReset = false; }
+    else if (!current.includes('.')) current += '.';
+    updateDisplay();
+  }
+
+  // ── OPERATOR ──
+  function inputOp(op) {
+    if (operator && !shouldReset) calculate(true);
+    previous = current;
+    operator = op;
+    shouldReset = true;
+    updateDisplay();
+  }
+
+  // ── CALCULATE ──
+  function calculate(chain = false) {
+    if (!operator || !previous) return;
+    const a = parseFloat(previous);
+    const b = parseFloat(current);
+    let result;
+
+    switch (operator) {
+      case '+': result = a + b; break;
+      case '−': result = a - b; break;
+      case '×': result = a * b; break;
+      case '÷': result = b === 0 ? 'Error' : a / b; break;
+      default: return;
+    }
+
+    const expr = `${formatNumber(previous)} ${operator} ${formatNumber(current)}`;
+    const resultStr = result === 'Error' ? 'Error' : parseFloat(result.toPrecision(12)).toString();
+
+    if (!chain) {
+      historyLine.textContent = `${expr} =`;
+      addToHistory(expr, resultStr);
+    }
+
+    current = resultStr;
+    if (!chain) { previous = ''; operator = null; }
+    shouldReset = true;
+    updateDisplay();
+  }
+
+  // ── CLEAR ──
+  function clear() {
+    current = '0'; previous = ''; operator = null; shouldReset = false;
+    historyLine.textContent = '';
+    expressionLine.textContent = '';
+    updateDisplay();
+  }
+
+  // ── SIGN ──
+  function toggleSign() {
+    if (current === '0' || current === 'Error') return;
+    current = current.startsWith('-') ? current.slice(1) : '-' + current;
+    updateDisplay();
+  }
+
+  // ── PERCENT ──
+  function percent() {
+    if (current === 'Error') return;
+    current = (parseFloat(current) / 100).toString();
+    updateDisplay();
+  }
+
+  // ── HISTORY ──
+  function addToHistory(expr, result) {
+    history.unshift({ expr, result });
+    if (history.length > 20) history.pop();
+    renderHistory();
+  }
+
+  function renderHistory() {
+    historyList.innerHTML = history.map((h, i) =>
+      `<li onclick="recallHistory(${i})">${h.expr} = <span>${formatNumber(h.result)}</span></li>`
+    ).join('');
+  }
+
+  function recallHistory(i) {
+    current = history[i].result;
+    shouldReset = true;
+    updateDisplay();
+  }
+
+  function clearHistory() {
+    history = [];
+    historyList.innerHTML = '';
+  }
+
+  // ── TOGGLE HISTORY ──
+  document.querySelector('.display').addEventListener('click', () => {
+    histOpen = !histOpen;
+    historyPanel.classList.toggle('open', histOpen);
+  });
+
+  // ── RIPPLE ──
+  function addRipple(btn, e) {
+    const rect = btn.getBoundingClientRect();
+    const r = document.createElement('span');
+    r.className = 'ripple';
+    const size = Math.max(rect.width, rect.height);
+    r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px`;
+    btn.appendChild(r);
+    setTimeout(() => r.remove(), 400);
+  }
+
+  // ── BUTTON EVENTS ──
+  document.querySelectorAll('.btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      addRipple(btn, e);
+      const action = btn.dataset.action;
+      const val    = btn.dataset.val;
+      switch (action) {
+        case 'num':     inputNum(val); break;
+        case 'op':      inputOp(val); break;
+        case 'equals':  calculate(); break;
+        case 'clear':   clear(); break;
+        case 'sign':    toggleSign(); break;
+        case 'percent': percent(); break;
+        case 'decimal': inputDecimal(); break;
+      }
+    });
+  });
+
+  // ── KEYBOARD ──
+  document.addEventListener('keydown', e => {
+    if (e.key >= '0' && e.key <= '9') inputNum(e.key);
+    else if (e.key === '.') inputDecimal();
+    else if (e.key === '+') inputOp('+');
+    else if (e.key === '-') inputOp('−');
+    else if (e.key === '*') inputOp('×');
+    else if (e.key === '/') { e.preventDefault(); inputOp('÷'); }
+    else if (e.key === 'Enter' || e.key === '=') calculate();
+    else if (e.key === 'Escape') clear();
+    else if (e.key === 'Backspace') {
+      if (current.length > 1) current = current.slice(0,-1);
+      else current = '0';
+      updateDisplay();
+    }
+    else if (e.key === '%') percent();
+  });
+
+  // ── INIT ──
+  updateDisplay();
+</script>
 </body>
 </html>
