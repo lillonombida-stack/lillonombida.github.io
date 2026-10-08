@@ -78,9 +78,6 @@ A browser-based step sequencer and synthesiser built entirely on the Web Audio A
 ## 📬 Get In Touch
 
 - 🌍 Portfolio: [lillonombida.github.io](https://lillonombida.github.io)
-- 🛍️ TJL Wears: [tjl-wears.myspreadshop.com](https://tjl-wears.myspreadshop.com)
-- 📸 Instagram: [@tjl_entertainment](https://instagram.com)
-
 ---
 
 *Built with intention. © 2026 Lillo Nombida*
