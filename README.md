@@ -1,83 +1,137 @@
-# Hi, I'm Lillo Nombida 👋
+<div align="center">
 
-> Frontend Developer · Creative · South Africa 🇿🇦
+# Lillo Nombida | Front-End Web Developer
 
-I build clean, fast, and purposeful digital experiences — from interactive web apps to full e-commerce storefronts. I work at the intersection of code, design, and culture.
+**I design and build clean, responsive, user-friendly websites and web applications.**
 
----
+[![Live Portfolio](https://img.shields.io/badge/Live%20Portfolio-lillonombida.github.io-2ea44f?style=for-the-badge&logo=github)](https://lillonombida.github.io)
 
-## 🌐 Portfolio — [lillonombida.github.io](https://lillonombida.github.io)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
+![Git](https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white)
+![GitHub Pages](https://img.shields.io/badge/Hosted%20on-GitHub%20Pages-181717?style=flat-square&logo=github&logoColor=white)
 
-My personal portfolio showcasing my frontend development work, built with a dark, minimal aesthetic and a focus on letting the projects speak for themselves.
+[About](#about) · [Projects](#projects) · [Skills](#skills) · [Getting Started](#getting-started) · [Project Structure](#project-structure) · [Contact](#contact)
 
-**Highlights:**
-- Fully responsive single-page design
-- Smooth scroll navigation with active section tracking
-- Project showcase with live links
-- Built with: `HTML` · `CSS` · `JavaScript`
-
----
-
-## 🛍️ TJL Wears — Entertainment Clothing Shop
-
-**[tjl-wears.myspreadshop.com](https://tjl-wears.myspreadshop.com)**
-
-TJL Wears is the official clothing brand of TJL Entertainment — a South African creative collective built around music, art, and street culture. The shop features limited-run apparel including tees, hoodies, headwear, and accessories.
-
-**What I built:**
-- Full e-commerce storefront UI (black & white theme)
-- Product filtering by category (Tees, Hoodies, Headwear, Accessories)
-- Working cart drawer with quantity controls
-- Product quick-view modal with size selector
-- Newsletter signup & animated hero section
-- Built with: `HTML` · `CSS` · `JavaScript`
+</div>
 
 ---
 
-## 🚀 Projects
+## About
 
-### 01 · Luminary UI Kit
-A production-ready React component library with 60+ accessible, dark-mode-first UI components built with TypeScript. Documented in Storybook with live previews and copy-ready code snippets.
-
-`React` `TypeScript` `Storybook` `Radix UI`
+I'm a front-end web developer focused on turning ideas into polished, accessible, and responsive interfaces. This repository hosts my portfolio website and a collection of projects that showcase my skills in layout design, styling, interactivity, and user experience.
 
 ---
 
-### 02 · Orbit Dashboard
-A real-time analytics dashboard powered by WebSocket data streams and custom D3.js visualisations. Built with Vue 3 and Vite, delivering live data updates with sub-100ms interaction latency.
+## Projects
 
-`Vue 3` `D3.js` `WebSockets` `Vite`
+### 1. Calculator
 
----
+A functional calculator that performs everyday arithmetic directly in the browser.
 
-### 03 · Prose Editor
-A from-scratch block-based rich text editor — no ProseMirror, no Slate. Features a fully custom caret engine, native selection handling, and a built-in undo/redo history system in vanilla JavaScript.
+- Supports addition, subtraction, multiplication, and division
+- Clear, button-based interface that is easy to use on desktop and mobile
+- Demonstrates event handling, DOM manipulation, and input logic
 
-`Vanilla JS` `ContentEditable API` `Rollup`
-
----
-
-### 04 · Synthwave
-A browser-based step sequencer and synthesiser built entirely on the Web Audio API. Create, layer, and export beats — no backend, no plugins, straight from the browser.
-
-`Web Audio API` `Canvas` `WebAssembly`
+**Skills shown:** HTML, CSS, JavaScript
 
 ---
 
-## 🛠️ Tech Stack
+### 2. Weather App
 
-| Category | Tools |
+An application that lets users look up current weather conditions for a location and view the results in a clear, readable layout.
+
+- Search by city to retrieve live weather information
+- Displays key details such as temperature and conditions
+- Demonstrates working with data and presenting it cleanly to the user
+
+**Skills shown:** HTML, CSS, JavaScript, API integration
+
+---
+
+### 3. TJL Clothing Shop
+
+A responsive online storefront concept for a clothing brand, designed to deliver a clean and modern shopping experience.
+
+- Product-focused layout with clear visual hierarchy
+- Responsive design that adapts to phones, tablets, and desktops
+- Consistent branding through shared styling
+
+**Skills shown:** HTML, CSS, responsive design, UI layout
+
+---
+
+### 4. Book Inventory
+
+A web page for cataloguing and organizing a collection of books in a structured, easy-to-scan format.
+
+- Organized presentation of book details
+- Clean, readable layout built with semantic HTML
+- Styled for consistency with the rest of the portfolio
+
+**Skills shown:** HTML, CSS, semantic markup, content organization
+
+---
+
+## Skills
+
+| Category | Technologies |
 |---|---|
-| **Languages** | HTML · CSS · JavaScript · TypeScript |
-| **Frameworks** | React · Next.js · Vue 3 · Astro |
-| **Tooling** | Vite · Storybook · Figma · Playwright |
-| **Styling** | Tailwind CSS · CSS Modules · Sass |
+| **Core** | HTML5, CSS3, JavaScript |
+| **Design** | Responsive layouts, Flexbox, CSS Grid, UI/UX fundamentals |
+| **Tools** | Git, GitHub, GitHub Pages, VS Code |
+| **Practices** | Semantic markup, accessibility, cross-browser compatibility |
 
 ---
 
-## 📬 Get In Touch
+## Getting Started
 
-- 🌍 Portfolio: [lillonombida.github.io](https://lillonombida.github.io)
+### Clone the repository
+
+```bash
+git clone https://github.com/lillonombida-stack/lillonombida.github.io.git
+cd lillonombida.github.io
+```
+
+### Run locally
+
+Open `index.html` in your browser, or start a local server:
+
+```bash
+python3 -m http.server 8000
+```
+
+Then visit `http://localhost:8000`.
+
 ---
 
-*Built with intention. © 2026 Lillo Nombida*
+## Project Structure
+
+```text
+lillonombida.github.io/
+├── index.html               # Portfolio home page
+├── style.css                # Shared styles
+├── calculator.html          # Calculator project
+├── WeatherApp               # Weather app project
+├── tjl_clothing_shop.html   # TJL Clothing Shop project
+├── book-inventory.html      # Book inventory project
+└── README.md                # Project documentation
+```
+
+---
+
+## Contact
+
+I'm open to new opportunities, collaborations, and feedback.
+
+- **GitHub:** (https://github.com/lillonombida-stack)
+- **Email:**  (mailto:your.email@example.com)
+
+---
+
+<div align="center">
+
+&copy; 2026 Lillo Nombida. All rights reserved.
+
+</div>
