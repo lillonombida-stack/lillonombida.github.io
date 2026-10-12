@@ -126,7 +126,7 @@ lillonombida.github.io/
 I'm open to new opportunities, collaborations, and feedback.
 
 - **GitHub:** (https://github.com/lillonombida-stack)
-- **Email:**  (mailto:your.email@example.com)
+- **Email:**  (lillononkonyana36@gmail.com)
 
 ---
 
